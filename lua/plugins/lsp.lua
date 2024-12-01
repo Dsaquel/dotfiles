@@ -4,15 +4,15 @@ return {
 		"williamboman/mason.nvim",
 		opts = function(_, opts)
 			vim.list_extend(opts.ensure_installed, {
-				"prettierd",
+				--"prettierd",
 				"stylua",
 				"selene",
 				"luacheck",
 				"shellcheck",
 				"shfmt",
 				"tailwindcss-language-server",
-				"typescript-language-server",
-				"vue-language-server",
+				--"typescript-language-server",
+				--"vue-language-server",
 				"css-lsp",
 				"python-lsp-server",
 			})
@@ -44,13 +44,18 @@ return {
 						return require("lspconfig.util").root_pattern(".git")(...)
 					end,
 				},
-				volar = {
-					filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+				volar = {},
+				ts_ls = {
 					init_options = {
-						vue = {
-							hybridMode = false,
+						plugins = { -- I think this was my breakthrough that made it work
+							{
+								name = "@vue/typescript-plugin",
+								location = "/usr/local/lib/node_modules/@vue/language-server",
+								languages = { "vue" },
+							},
 						},
 					},
+					filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 				},
 				html = {},
 				yamlls = {
