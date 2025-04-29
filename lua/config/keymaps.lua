@@ -29,6 +29,9 @@ keymap.set("n", "dw", 'vb"_d')
 -- Select all
 keymap.set("n", "<C-a>", "gg<S-v>G")
 
+-- prevent kitty CTRL-C https://github.com/neovim/neovim/issues/16416
+keymap.set("i", "<C-C>", "<C-C>")
+
 -- Save with root permission (not working for now)
 --vim.api.nvim_create_user_command('W', 'w !sudo tee > /dev/null %', {})
 
