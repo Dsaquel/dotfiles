@@ -50,7 +50,7 @@ return {
 						plugins = { -- I think this was my breakthrough that made it work
 							{
 								name = "@vue/typescript-plugin",
-								location = "/usr/local/lib/node_modules/@vue/language-server",
+								location = "/home/element/n/lib/node_modules/@vue/language-server",
 								languages = { "vue" },
 							},
 						},
