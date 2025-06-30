@@ -15,6 +15,7 @@ return {
 				--"vue-language-server",
 				"css-lsp",
 				"python-lsp-server",
+				--"python-lsp-server",
 			})
 		end,
 	},
@@ -38,6 +39,7 @@ return {
 			inlay_hints = { enabled = false },
 			---@type lspconfig.options
 			servers = {
+        pyright = {},
 				cssls = {},
 				tailwindcss = {
 					root_dir = function(...)
@@ -58,6 +60,7 @@ return {
 					filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 				},
 				html = {},
+        julials = {},
 				yamlls = {
 					settings = {
 						yaml = {

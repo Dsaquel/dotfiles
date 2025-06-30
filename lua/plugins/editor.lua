@@ -129,6 +129,14 @@ return {
 				desc = "Lists Function names, variables, from Treesitter",
 			},
 			{
+				";q",
+				function()
+					local builtin = require("telescope.builtin")
+					builtin.oldfiles( { only_cwd = true  } )
+				end,
+				desc = "List recent files",
+			},
+			{
 				"sf",
 				function()
 					local telescope = require("telescope")
