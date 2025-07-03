@@ -46,7 +46,7 @@ return {
 						return require("lspconfig.util").root_pattern(".git")(...)
 					end,
 				},
-				volar = {},
+				--volar = {},
 				ts_ls = {
 					init_options = {
 						plugins = { -- I think this was my breakthrough that made it work
