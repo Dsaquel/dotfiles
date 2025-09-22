@@ -14,7 +14,7 @@ return {
 	},
 
 	{
-		"echasnovski/mini.hipatterns",
+		"nvim-mini/mini.hipatterns",
 		event = "BufReadPre",
 		opts = {
 			highlighters = {
@@ -132,7 +132,7 @@ return {
 				";q",
 				function()
 					local builtin = require("telescope.builtin")
-					builtin.oldfiles( { only_cwd = true  } )
+					builtin.oldfiles({ only_cwd = true  })
 				end,
 				desc = "List recent files",
 			},
@@ -169,6 +169,9 @@ return {
 				layout_strategy = "horizontal",
 				layout_config = { prompt_position = "top" },
 				sorting_strategy = "ascending",
+        preview = {
+          treesitter = false,
+        },
 				winblend = 0,
 				mappings = {
 					n = {},
