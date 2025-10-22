@@ -47,6 +47,7 @@ return {
 					end,
 				},
 				--volar = {},
+				vue_ls = {},
 				ts_ls = {
 					init_options = {
 						plugins = { -- I think this was my breakthrough that made it work
