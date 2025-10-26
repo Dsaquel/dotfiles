@@ -4,18 +4,13 @@ return {
     "mason-org/mason.nvim",
 		opts = function(_, opts)
 			vim.list_extend(opts.ensure_installed, {
-				--"prettierd",
 				"stylua",
 				"selene",
 				"luacheck",
 				"shellcheck",
 				"shfmt",
-				"tailwindcss-language-server",
-				--"typescript-language-server",
-				--"vue-language-server",
 				"css-lsp",
 				"python-lsp-server",
-				--"python-lsp-server",
 			})
 		end,
 	},
@@ -23,19 +18,12 @@ return {
 	-- lsp servers
 	{
 		"neovim/nvim-lspconfig",
-		init = function()
-			local keys = require("lazyvim.plugins.lsp.keymaps").get()
-			keys[#keys + 1] = {
-				"gd",
-				function()
-					-- DO NOT RESUSE WINDOW
-					require("telescope.builtin").lsp_definitions({ reuse_win = false })
-				end,
-				desc = "Goto Definition",
-				has = "definition",
-			}
-		end,
 		opts = {
+      ['*'] = {
+        keys = {
+          { "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", has = "definition"},
+        },
+      },
 			inlay_hints = { enabled = false },
 			---@type lspconfig.options
 			servers = {
@@ -46,7 +34,6 @@ return {
 						return require("lspconfig.util").root_pattern(".git")(...)
 					end,
 				},
-				--volar = {},
 				vue_ls = {},
 				ts_ls = {
 					init_options = {
