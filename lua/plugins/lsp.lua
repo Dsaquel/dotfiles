@@ -1,3 +1,5 @@
+local vue_language_server_path = vim.trim(vim.fn.system("npm root -g")) .. "/@vue/language-server"
+
 return {
 	-- tools
 	{
@@ -40,7 +42,7 @@ return {
 						plugins = { -- I think this was my breakthrough that made it work
 							{
 								name = "@vue/typescript-plugin",
-								location = "/home/element/n/lib/node_modules/@vue/language-server",
+								location = vue_language_server_path,
 								languages = { "vue" },
 							},
 						},

@@ -14,24 +14,16 @@ return {
 	},
 
 	{
-		"nvim-mini/mini.hipatterns",
+		"brenoprata10/nvim-highlight-colors",
 		event = "BufReadPre",
 		opts = {
-			highlighters = {
-				hsl_color = {
-					pattern = "hsl%(%d+,? %d+%%?,? %d+%%?%)",
-					group = function(_, match)
-						local utils = require("solarized-osaka.hsl")
-						--- @type string, string, string
-						local nh, ns, nl = match:match("hsl%((%d+),? (%d+)%%?,? (%d+)%%?%)")
-						--- @type number?, number?, number?
-						local h, s, l = tonumber(nh), tonumber(ns), tonumber(nl)
-						--- @type string
-						local hex_color = utils.hslToHex(h, s, l)
-						return MiniHipatterns.compute_hex_color_group(hex_color, "bg")
-					end,
-				},
-			},
+			render = "background",
+			enable_hex = true,
+			enable_short_hex = true,
+			enable_rgb = true,
+			enable_hsl = true,
+			enable_hsl_without_function = true,
+			enable_tailwind = true,
 		},
 	},
 
@@ -49,7 +41,7 @@ return {
 	},
 
 	{
-		"telescope.nvim",
+		"nvim-telescope/telescope.nvim",
 		dependencies = {
 			{
 				"nvim-telescope/telescope-fzf-native.nvim",
@@ -83,7 +75,7 @@ return {
 				function()
 					local builtin = require("telescope.builtin")
 					builtin.live_grep({
-						additional_args = { "--hidden" },
+						additional_args = { "--hidden", "--fixed-strings" },
 					})
 				end,
 				desc = "Search for a string in your current working directory and get results live as you type, respects .gitignore",
