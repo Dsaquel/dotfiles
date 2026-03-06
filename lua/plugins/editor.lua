@@ -1,15 +1,19 @@
 return {
 	{
-		enabled = false,
 		"folke/flash.nvim",
 		---@type Flash.Config
 		opts = {
-			search = {
-				forward = true,
-				multi_window = false,
-				wrap = false,
-				incremental = true,
+			modes = {
+				char = { enabled = false }, -- don't override f/t/F/T
+				search = { enabled = false }, -- don't override /
 			},
+		},
+		-- stylua: ignore
+		keys = {
+			{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+			{ "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+			{ "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+			{ "<C-s>", mode = "c", function() require("flash").toggle() end, desc = "Toggle Flash Search" },
 		},
 	},
 

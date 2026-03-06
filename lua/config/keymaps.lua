@@ -72,3 +72,6 @@ end)
 keymap.set("n", "<leader>i", function()
 	require("craftzdog.lsp").toggleInlayHints()
 end)
+
+keymap.set({ "n", "x", "o" }, "<C-n>", ";")
+keymap.set({ "n", "x", "o" }, "<C-p>", ",")
