@@ -30,27 +30,15 @@ return {
 		end,
 	},
 
-	-- Better increase/decrease
 	{
 		"monaqa/dial.nvim",
-		-- stylua: ignore
-		keys = {
-			{ "+", function() return require("dial.map").inc_normal() end, expr = true, desc = "Increment" },
-			{ "-", function() return require("dial.map").dec_normal() end, expr = true, desc = "Decrement" },
-		},
-		config = function()
-			local augend = require("dial.augend")
-			require("dial.config").augends:register_group({
-				default = {
-					augend.integer.alias.decimal,
-					augend.integer.alias.hex,
-					augend.date.alias["%Y/%m/%d"],
-					augend.constant.alias.bool,
-					augend.semver.alias.semver,
-					augend.constant.new({ elements = { "let", "const" } }),
-				},
-			})
-		end,
+		enabled = false,
+	},
+
+	{
+		"nvim-mini/mini.surround",
+		event = "BufReadPost",
+		opts = {},
 	},
 
 	{
@@ -67,6 +55,18 @@ return {
 		---@type snacks.Config
 		opts = {
 			scroll = { enabled = false },
+			indent = { enabled = true },
+			words = { enabled = true },
+			lazygit = { enabled = true },
+			gitbrowse = { enabled = true },
+			scratch = { enabled = true },
+		},
+		-- stylua: ignore
+		keys = {
+			{ "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
+			{ "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse" },
+			{ "<leader>.", function() Snacks.scratch() end, desc = "Scratch Buffer" },
+			{ "<leader>S", function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
 		},
 	},
 }
