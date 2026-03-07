@@ -18,6 +18,16 @@ return {
 	},
 
 	{
+		"mikesmithgh/kitty-scrollback.nvim",
+		lazy = false,
+		cmd = { "KittyScrollbackGenerateKittens", "KittyScrollbackCheckHealth" },
+		event = { "User KittyScrollbackLaunch" },
+		config = function()
+			require("kitty-scrollback").setup()
+		end,
+	},
+
+	{
 		"brenoprata10/nvim-highlight-colors",
 		event = "BufReadPre",
 		opts = {
