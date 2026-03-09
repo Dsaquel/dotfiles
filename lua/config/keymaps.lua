@@ -20,7 +20,7 @@ keymap.set("v", "<Leader>d", '"_d')
 keymap.set("v", "<Leader>D", '"_D')
 
 -- Delete a word backwards
-keymap.set("n", "dw", 'vb"_d')
+keymap.set("n", "db", '"_dbx')
 
 -- Select all
 keymap.set("n", "<C-a>", "gg<S-v>G")
