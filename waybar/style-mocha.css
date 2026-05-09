@@ -1,0 +1,209 @@
+@define-color base       #1E1E2E;
+@define-color mantle     #181825;
+@define-color crust      #11111B;
+@define-color text       #CDD6F4;
+@define-color subtext1   #BAC2DE;
+@define-color subtext0   #A6ADC8;
+@define-color surface0   #313244;
+@define-color surface1   #45475A;
+@define-color surface2   #585B70;
+@define-color overlay0   #6C7086;
+@define-color fubuki     #89DCEB;
+@define-color haato      #F5C2E7;
+@define-color sora       #74C7EC;
+
+@keyframes oshiPulse {
+  0%   { box-shadow: 0 0  8px rgba(203, 166, 247, 0.55); }
+  50%  { box-shadow: 0 0 18px rgba(203, 166, 247, 0.95); }
+  100% { box-shadow: 0 0  8px rgba(203, 166, 247, 0.55); }
+}
+
+@keyframes urgentBlink {
+  0%   { background-color: rgba(245, 194, 231, 0.6); }
+  50%  { background-color: rgba(245, 194, 231, 1.0); }
+  100% { background-color: rgba(245, 194, 231, 0.6); }
+}
+
+* {
+  font-family: "JetBrainsMono Nerd Font", "Hack Nerd Font", "Noto Sans CJK JP";
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+}
+
+window#waybar {
+  background: linear-gradient(180deg, alpha(@base, 0.0) 0%, alpha(@mantle, 0.0) 100%);
+  color: @text;
+  transition: background-color 300ms ease;
+}
+
+.modules-left, .modules-center, .modules-right {
+  background: linear-gradient(135deg, alpha(@base, 0.92) 0%, alpha(@mantle, 0.92) 100%);
+  border-radius: 16px;
+  margin: 5px 6px;
+  padding: 0 6px;
+  border: 1px solid alpha(@oshi_primary, 0.25);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+#custom-launcher {
+  font-size: 18px;
+  margin: 4px 4px 4px 0;
+  padding: 0 12px;
+  background: linear-gradient(135deg, @oshi_primary 0%, @oshi_secondary 100%);
+  border-radius: 12px;
+  color: @base;
+  box-shadow: 0 2px 8px alpha(@oshi_primary, 0.6);
+  transition: all 250ms ease;
+}
+#custom-launcher:hover {
+  background: linear-gradient(135deg, @oshi_secondary 0%, @oshi_accent 100%);
+  box-shadow: 0 3px 14px alpha(@oshi_secondary, 0.8);
+}
+
+#custom-separator {
+  color: alpha(@oshi_primary, 0.4);
+  font-size: 8px;
+  padding: 0 4px;
+  margin: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+#workspaces {
+  padding: 2px 4px;
+  margin: 4px 2px;
+  background-color: transparent;
+}
+#workspaces button {
+  padding: 0 10px;
+  margin: 0 2px;
+  color: @subtext1;
+  background-color: alpha(@surface0, 0.55);
+  border-radius: 9px;
+  border: 1px solid transparent;
+  transition: all 250ms ease;
+}
+#workspaces button:hover {
+  background-color: alpha(@oshi_primary, 0.25);
+  color: @oshi_primary;
+  border: 1px solid alpha(@oshi_primary, 0.6);
+}
+#workspaces button.active {
+  background: linear-gradient(135deg, @oshi_primary 0%, @oshi_secondary 100%);
+  color: @base;
+  font-weight: 800;
+  padding: 0 14px;
+  border: 1px solid alpha(#FFFFFF, 0.3);
+}
+#workspaces button.urgent {
+  animation: urgentBlink 1s ease-in-out infinite;
+  color: @base;
+  font-weight: 800;
+}
+#workspaces button.empty {
+  color: @overlay0;
+  background-color: transparent;
+}
+
+#window,
+#clock,
+#cpu,
+#memory,
+#disk,
+#pulseaudio,
+#network,
+#tray,
+#custom-notification,
+#idle_inhibitor,
+#language {
+  background-color: alpha(@surface0, 0.7);
+  margin: 4px 2px;
+  padding: 0 12px;
+  border-radius: 11px;
+  border: 1px solid alpha(@oshi_primary, 0.18);
+  transition: all 250ms ease;
+}
+
+#window {
+  font-style: italic;
+  color: @text;
+  font-weight: 500;
+  background: linear-gradient(135deg, alpha(@surface0, 0.7) 0%, alpha(@surface1, 0.7) 100%);
+}
+
+#clock {
+  color: @oshi_primary;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 0.6px;
+  padding: 0 18px;
+  background: linear-gradient(135deg, alpha(@oshi_primary, 0.15) 0%, alpha(@oshi_secondary, 0.15) 100%);
+  border: 1px solid alpha(@oshi_secondary, 0.4);
+  box-shadow: inset 0 0 8px alpha(@oshi_primary, 0.18);
+}
+
+#idle_inhibitor       { color: @overlay0; font-size: 14px; }
+#idle_inhibitor.activated { color: @haato; box-shadow: 0 0 8px alpha(@haato, 0.6); }
+#language             { color: @sora; font-weight: 700; }
+#cpu                  { color: @fubuki; }
+#memory               { color: @haato; }
+#disk                 { color: @oshi_secondary; }
+#pulseaudio           { color: @oshi_primary; }
+#network              { color: @sora; }
+#network.disconnected { color: #F38BA8; border-color: alpha(#F38BA8, 0.5); }
+#pulseaudio.muted     { color: @overlay0; }
+#tray { padding: 0 8px; }
+
+#custom-notification {
+  color: @oshi_secondary;
+  font-size: 14px;
+  font-weight: bold;
+  background: linear-gradient(135deg, alpha(@oshi_secondary, 0.22) 0%, alpha(@oshi_primary, 0.22) 100%);
+  border: 1px solid alpha(@oshi_secondary, 0.55);
+  box-shadow: 0 0 10px alpha(@oshi_secondary, 0.3);
+}
+
+#window:hover,
+#clock:hover,
+#cpu:hover,
+#memory:hover,
+#disk:hover,
+#pulseaudio:hover,
+#network:hover,
+#tray:hover,
+#custom-notification:hover,
+#idle_inhibitor:hover,
+#language:hover {
+  background-color: alpha(@surface1, 0.95);
+  box-shadow: 0 4px 18px alpha(@oshi_primary, 0.55);
+  border-color: alpha(@oshi_primary, 0.7);
+}
+
+tooltip {
+  background: linear-gradient(135deg, alpha(@mantle, 0.98) 0%, alpha(@base, 0.98) 100%);
+  border: 1px solid @oshi_primary;
+  border-radius: 14px;
+}
+tooltip label {
+  color: @text;
+  padding: 8px 12px;
+}
+
+window#waybar.right #workspaces button.active {
+  background: linear-gradient(135deg, @fubuki 0%, @sora 100%);
+}
+window#waybar.right #workspaces button:hover {
+  background-color: alpha(@fubuki, 0.25);
+  color: @fubuki;
+  border: 1px solid alpha(@fubuki, 0.6);
+}
+window#waybar.right .modules-center {
+  box-shadow: inset 0 2px 0 0 alpha(@fubuki, 0.5);
+}
+window#waybar.left .modules-center {
+  box-shadow: inset 0 2px 0 0 alpha(@oshi_primary, 0.5);
+}

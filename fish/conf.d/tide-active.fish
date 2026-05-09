@@ -1,0 +1,1 @@
+/home/element/.config/fish/conf.d/tide-mocha.fish
