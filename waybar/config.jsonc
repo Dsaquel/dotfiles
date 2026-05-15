@@ -1,6 +1,6 @@
 // Waybar — Omarchy/Floating-Pill-Cluster style (popular 2026 pattern)
-//   DP-3      (left)  → workspaces 1, 3, 5, 7, 9 · oshi accent
-//   HDMI-A-1  (right) → workspaces 2, 4, 6, 8, 10 + tray + notif · oshi accent
+//   DP-3      (left)  → workspaces 1–5  · oshi accent
+//   HDMI-A-1  (right) → workspaces 6–10 + tray + notif · oshi accent
 // Visual: thin dock-mode bar, transparent background, multiple separate floating
 // pill clusters per side. Per-module accent colours. Window title in centre.
 [
@@ -45,14 +45,18 @@
     },
 
     "hyprland/workspaces": {
-      "format": "{name}",
+      "format": "{icon}",
+      "format-icons": {
+        "1": "a", "2": "z", "3": "e", "4": "r", "5": "t",
+        "6": "y", "7": "u", "8": "i", "9": "o", "10": "p"
+      },
       "on-click": "activate",
       "on-scroll-up":   "hyprctl dispatch workspace e+1",
       "on-scroll-down": "hyprctl dispatch workspace e-1",
       "all-outputs": false,
       "show-special": false,
       "persistent-workspaces": {
-        "DP-3": [1, 3, 5, 7, 9]
+        "DP-3": [1, 2, 3, 4, 5]
       }
     },
 
@@ -178,14 +182,18 @@
     },
 
     "hyprland/workspaces": {
-      "format": "{name}",
+      "format": "{icon}",
+      "format-icons": {
+        "1": "a", "2": "z", "3": "e", "4": "r", "5": "t",
+        "6": "y", "7": "u", "8": "i", "9": "o", "10": "p"
+      },
       "on-click": "activate",
       "on-scroll-up":   "hyprctl dispatch workspace e+1",
       "on-scroll-down": "hyprctl dispatch workspace e-1",
       "all-outputs": false,
       "show-special": false,
       "persistent-workspaces": {
-        "HDMI-A-1": [2, 4, 6, 8, 10]
+        "HDMI-A-1": [6, 7, 8, 9, 10]
       }
     },
 
