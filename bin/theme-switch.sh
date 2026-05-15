@@ -278,12 +278,31 @@ EOF
 mv "${TMP_KV}" "${KVANTUM_CFG}"
 
 # Wallpaper via awww — was || true in v1
+# The awww client connects to the daemon's SOCKET, not its PID. A live process
+# whose socket isn't bound yet still fails the client ("Socket file ... not found").
+# So: ensure the daemon is up, then poll the socket itself — never a fixed sleep.
 if ! pgrep -x "${WALLPAPER_DAEMON_BIN}" >/dev/null; then
     "${WALLPAPER_DAEMON_BIN}" >/dev/null 2>&1 &
-    sleep 1
-    pgrep -x "${WALLPAPER_DAEMON_BIN}" >/dev/null || { echo "[FAIL] ${WALLPAPER_DAEMON_BIN} did not start"; exit 1; }
 fi
-"${WALLPAPER_CTL_BIN}" img "${WALLPAPER}" --transition-type fade --transition-duration 1 --transition-fps 60
+AWWW_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+AWWW_SOCKET=""
+for _ in $(seq 1 50); do  # up to 5s — glob, since WAYLAND_DISPLAY may be absent in systemd units
+    # `|| true`: under `set -e -o pipefail` a failed ls (no socket yet) would
+    # otherwise abort the script on iteration 1 — defeating this whole poll loop.
+    AWWW_SOCKET=$(ls "${AWWW_RUNTIME_DIR}"/*-awww-daemon.sock 2>/dev/null | head -1) || true
+    [ -n "${AWWW_SOCKET}" ] && [ -S "${AWWW_SOCKET}" ] && break
+    sleep 0.1
+done
+[ -n "${AWWW_SOCKET}" ] && [ -S "${AWWW_SOCKET}" ] || { echo "[FAIL] ${WALLPAPER_DAEMON_BIN} socket not ready in ${AWWW_RUNTIME_DIR}"; exit 1; }
+# Socket bound != daemon ready to serve — on cold boot the first `img` can still
+# be rejected. Retry a few times before treating it as a CRITICAL failure.
+for _try in $(seq 1 10); do
+    if "${WALLPAPER_CTL_BIN}" img "${WALLPAPER}" --transition-type fade --transition-duration 1 --transition-fps 60; then
+        break
+    fi
+    [ "${_try}" -eq 10 ] && { echo "[FAIL] ${WALLPAPER_CTL_BIN} img rejected after 10 tries"; exit 1; }
+    sleep 0.3
+done
 
 # Hyprlock: swap wallpaper path + accent per oshi+mode (OPTIONAL — cosmetic)
 HYPRLOCK_CONF="/home/element/.config/hypr/hyprlock.conf"

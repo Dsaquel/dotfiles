@@ -1,27 +1,47 @@
-// Waybar config — two bars, one per monitor.
-//   DP-3      (left)  → workspaces 1, 3, 5, 7, 9
-//   HDMI-A-1  (right) → workspaces 2, 4, 6, 8, 10  + tray + notifications
+// Waybar — Omarchy/Floating-Pill-Cluster style (popular 2026 pattern)
+//   DP-3      (left)  → workspaces 1, 3, 5, 7, 9 · oshi accent
+//   HDMI-A-1  (right) → workspaces 2, 4, 6, 8, 10 + tray + notif · oshi accent
+// Visual: thin dock-mode bar, transparent background, multiple separate floating
+// pill clusters per side. Per-module accent colours. Window title in centre.
 [
   {
     "name": "left",
     "output": ["DP-3"],
     "layer": "top",
     "position": "top",
-    "height": 44,
-    "spacing": 8,
-    "modules-left":   ["custom/launcher", "hyprland/workspaces", "custom/separator", "hyprland/window"],
-    "modules-center": ["clock"],
-    "modules-right":  ["idle_inhibitor", "hyprland/language", "custom/separator", "cpu", "memory", "disk", "custom/separator", "pulseaudio", "network"],
+    "mode": "dock",
+    "height": 30,
+    "spacing": 0,
+    "margin-top": 6,
+    "margin-left": 8,
+    "margin-right": 8,
+    "reload_style_on_change": true,
+
+    "group/left-logo": {
+      "orientation": "inherit",
+      "modules": ["custom/launcher", "clock"]
+    },
+    "group/left-ws": {
+      "orientation": "inherit",
+      "modules": ["hyprland/workspaces", "idle_inhibitor"]
+    },
+    "group/right-sys": {
+      "orientation": "inherit",
+      "modules": ["cpu", "memory", "pulseaudio", "network"]
+    },
+    "group/right-meta": {
+      "orientation": "inherit",
+      "modules": ["hyprland/language", "privacy"]
+    },
+
+    "modules-left":   ["group/left-logo", "group/left-ws"],
+    "modules-center": ["hyprland/window"],
+    "modules-right":  ["group/right-meta", "group/right-sys"],
 
     "custom/launcher": {
       "format": "🍙",
       "tooltip": false,
       "on-click": "fuzzel"
-    },
-
-    "custom/separator": {
-      "format": "",
-      "tooltip": false
     },
 
     "hyprland/workspaces": {
@@ -36,18 +56,6 @@
       }
     },
 
-    "hyprland/window": {
-      "format": "{title}",
-      "max-length": 60,
-      "separate-outputs": true,
-      "rewrite": {
-        "(.*) — Mozilla Firefox": "🦊 $1",
-        "(.*) - Brave": "󰖟 $1",
-        "(.*) - kitty": " $1",
-        "": "✨"
-      }
-    },
-
     "idle_inhibitor": {
       "format": "{icon}",
       "format-icons": { "activated": "󰒳", "deactivated": "󰒲" },
@@ -56,25 +64,60 @@
     },
 
     "hyprland/language": {
-      "format": " {}",
+      "format": "{}",
       "format-fr": "FR",
       "format-en": "EN",
       "format-jp": "JP"
     },
 
+    "privacy": {
+      "icon-size": 12,
+      "icon-spacing": 4,
+      "transition-duration": 250,
+      "modules": [
+        { "type": "screenshare", "tooltip": true },
+        { "type": "audio-in",    "tooltip": true }
+      ]
+    },
+
+    "hyprland/window": {
+      "format": "{title}",
+      "max-length": 70,
+      "separate-outputs": true,
+      "rewrite": {
+        "(.*) — Mozilla Firefox": "🦊 $1",
+        "(.*) - Brave": "󰖟 $1",
+        "(.*) - kitty": " $1",
+        "(.*) - nvim": " $1",
+        "": " "
+      }
+    },
+
     "clock": {
-      "format": "  {:%H:%M}",
-      "format-alt": "  {:%a %d %b · %Y}",
+      "format": "{:%H:%M}",
+      "format-alt": "{:%a %d %b}",
       "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     },
 
-    "cpu":     { "format": "  {usage}%", "interval": 5, "on-click": "kitty -e btop" },
-    "memory":  { "format": "  {percentage}%", "interval": 5, "on-click": "kitty -e btop" },
-    "disk":    { "format": "  {percentage_used}%", "path": "/", "interval": 30 },
+    "cpu": {
+      "interval": 5,
+      "format": " cpu·{icon}",
+      "format-icons": ["low", "low", "med", "med", "hi"],
+      "states": { "low": 0, "medium": 40, "high": 80 },
+      "on-click": "kitty -e btop"
+    },
+
+    "memory": {
+      "interval": 5,
+      "format": " ram·{icon}",
+      "format-icons": ["low", "low", "med", "med", "hi"],
+      "states": { "low": 0, "medium": 40, "high": 80 },
+      "on-click": "kitty -e btop"
+    },
 
     "pulseaudio": {
-      "format": "{icon}  {volume}%",
-      "format-muted": "  muted",
+      "format": " vol·{volume}",
+      "format-muted": " muted",
       "format-icons": { "default": ["", "", ""] },
       "on-click": "pavucontrol",
       "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+",
@@ -82,9 +125,9 @@
     },
 
     "network": {
-      "format-wifi": "  {essid}",
-      "format-ethernet": "  {ifname}",
-      "format-disconnected": "  off",
+      "format-wifi": " net·{essid}",
+      "format-ethernet": " net·{ifname}",
+      "format-disconnected": " offline",
       "tooltip-format": "{ifname}: {ipaddr}",
       "on-click": "kitty -e nmtui"
     }
@@ -95,21 +138,43 @@
     "output": ["HDMI-A-1"],
     "layer": "top",
     "position": "top",
-    "height": 44,
-    "spacing": 8,
-    "modules-left":   ["custom/launcher", "hyprland/workspaces", "custom/separator", "hyprland/window"],
-    "modules-center": ["clock"],
-    "modules-right":  ["idle_inhibitor", "hyprland/language", "custom/separator", "cpu", "memory", "disk", "custom/separator", "pulseaudio", "network", "tray", "custom/notification"],
+    "mode": "dock",
+    "height": 30,
+    "spacing": 0,
+    "margin-top": 6,
+    "margin-left": 8,
+    "margin-right": 8,
+    "reload_style_on_change": true,
+
+    "group/left-logo": {
+      "orientation": "inherit",
+      "modules": ["custom/launcher", "clock"]
+    },
+    "group/left-ws": {
+      "orientation": "inherit",
+      "modules": ["hyprland/workspaces", "idle_inhibitor"]
+    },
+    "group/right-sys": {
+      "orientation": "inherit",
+      "modules": ["cpu", "memory", "pulseaudio", "network"]
+    },
+    "group/right-meta": {
+      "orientation": "inherit",
+      "modules": ["hyprland/language", "privacy"]
+    },
+    "group/right-tray": {
+      "orientation": "inherit",
+      "modules": ["tray", "custom/notification"]
+    },
+
+    "modules-left":   ["group/left-logo", "group/left-ws"],
+    "modules-center": ["hyprland/window"],
+    "modules-right":  ["group/right-meta", "group/right-sys", "group/right-tray"],
 
     "custom/launcher": {
       "format": "🍙",
       "tooltip": false,
       "on-click": "fuzzel"
-    },
-
-    "custom/separator": {
-      "format": "",
-      "tooltip": false
     },
 
     "hyprland/workspaces": {
@@ -124,18 +189,6 @@
       }
     },
 
-    "hyprland/window": {
-      "format": "{title}",
-      "max-length": 60,
-      "separate-outputs": true,
-      "rewrite": {
-        "(.*) — Mozilla Firefox": "🦊 $1",
-        "(.*) - Brave": "󰖟 $1",
-        "(.*) - kitty": " $1",
-        "": "✨"
-      }
-    },
-
     "idle_inhibitor": {
       "format": "{icon}",
       "format-icons": { "activated": "󰒳", "deactivated": "󰒲" },
@@ -144,25 +197,60 @@
     },
 
     "hyprland/language": {
-      "format": " {}",
+      "format": "{}",
       "format-fr": "FR",
       "format-en": "EN",
       "format-jp": "JP"
     },
 
+    "privacy": {
+      "icon-size": 12,
+      "icon-spacing": 4,
+      "transition-duration": 250,
+      "modules": [
+        { "type": "screenshare", "tooltip": true },
+        { "type": "audio-in",    "tooltip": true }
+      ]
+    },
+
+    "hyprland/window": {
+      "format": "{title}",
+      "max-length": 70,
+      "separate-outputs": true,
+      "rewrite": {
+        "(.*) — Mozilla Firefox": "🦊 $1",
+        "(.*) - Brave": "󰖟 $1",
+        "(.*) - kitty": " $1",
+        "(.*) - nvim": " $1",
+        "": " "
+      }
+    },
+
     "clock": {
-      "format": "  {:%H:%M}",
-      "format-alt": "  {:%a %d %b · %Y}",
+      "format": "{:%H:%M}",
+      "format-alt": "{:%a %d %b}",
       "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     },
 
-    "cpu":     { "format": "  {usage}%", "interval": 5, "on-click": "kitty -e btop" },
-    "memory":  { "format": "  {percentage}%", "interval": 5, "on-click": "kitty -e btop" },
-    "disk":    { "format": "  {percentage_used}%", "path": "/", "interval": 30 },
+    "cpu": {
+      "interval": 5,
+      "format": " cpu·{icon}",
+      "format-icons": ["low", "low", "med", "med", "hi"],
+      "states": { "low": 0, "medium": 40, "high": 80 },
+      "on-click": "kitty -e btop"
+    },
+
+    "memory": {
+      "interval": 5,
+      "format": " ram·{icon}",
+      "format-icons": ["low", "low", "med", "med", "hi"],
+      "states": { "low": 0, "medium": 40, "high": 80 },
+      "on-click": "kitty -e btop"
+    },
 
     "pulseaudio": {
-      "format": "{icon}  {volume}%",
-      "format-muted": "  muted",
+      "format": " vol·{volume}",
+      "format-muted": " muted",
       "format-icons": { "default": ["", "", ""] },
       "on-click": "pavucontrol",
       "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+",
@@ -170,23 +258,23 @@
     },
 
     "network": {
-      "format-wifi": "  {essid}",
-      "format-ethernet": "  {ifname}",
-      "format-disconnected": "  off",
+      "format-wifi": " net·{essid}",
+      "format-ethernet": " net·{ifname}",
+      "format-disconnected": " offline",
       "tooltip-format": "{ifname}: {ipaddr}",
       "on-click": "kitty -e nmtui"
     },
 
-    "tray": { "icon-size": 20, "spacing": 8 },
+    "tray": { "icon-size": 14, "spacing": 6 },
 
     "custom/notification": {
       "tooltip": false,
       "format": "{icon}",
       "format-icons": {
-        "notification":     "  ",
-        "none":             "  ",
-        "dnd-notification": "  ",
-        "dnd-none":         "  "
+        "notification":     "",
+        "none":             "",
+        "dnd-notification": "",
+        "dnd-none":         ""
       },
       "return-type": "json",
       "exec-if": "which swaync-client",

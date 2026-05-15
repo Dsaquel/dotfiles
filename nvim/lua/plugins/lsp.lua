@@ -1,4 +1,4 @@
-local vue_language_server_path = vim.trim(vim.fn.system("npm root -g")) .. "/@vue/language-server"
+local vue_language_server_path = vim.fn.stdpath("data") .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
 
 return {
 	{
@@ -12,6 +12,7 @@ return {
 				"shfmt",
 				"css-lsp",
 				"python-lsp-server",
+				"vue-language-server",
 			})
 		end,
 	},
