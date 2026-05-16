@@ -21,6 +21,7 @@ alias rg "rg --hyperlink-format=kitty"
 alias lg lazygit
 alias claude "claude --dangerously-skip-permissions"
 alias kimi "kimi --yolo"
+alias "ca" "claude agents --dangerously-skip-permissions"
 
 set -gx EDITOR nvim
 
