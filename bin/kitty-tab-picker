@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+FZF=$(command -v fzf 2>/dev/null || echo "$HOME/.fzf/bin/fzf")
+[ -x "$FZF" ] || { echo "fzf not found" >&2; sleep 2; exit 1; }
+
+entries=$(kitty @ ls | jq -r --arg wid "${KITTY_WINDOW_ID:-0}" '
+    [.[] | select(any(.tabs[].windows[]; (.id | tostring) == $wid))][0]
+    | .tabs[]
+    | . as $t
+    | ($t.windows | map(select((.id | tostring) != $wid)) | length) as $n
+    | "\($t.id)\t\(if $t.is_active then "●" else " " end) \($t.title)  [\($n)]"
+')
+
+[ -n "$entries" ] || exit 0
+
+choice=$(printf '%s\n' "$entries" | "$FZF" \
+    --delimiter=$'\t' --with-nth=2.. \
+    --prompt='tab > ' --height=100% --reverse --info=inline) || exit 0
+
+kitty @ focus-tab --match "id:${choice%%$'\t'*}"
