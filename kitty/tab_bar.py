@@ -22,6 +22,7 @@ date_color = as_rgb(color_as_int(opts.color8))
 SEPARATOR_SYMBOL, SOFT_SEPARATOR_SYMBOL = ("", "")
 RIGHT_MARGIN = 1
 REFRESH_TIME = 1
+VERTICAL_EDGES = ("left", "right")
 ICON = "  "
 UNPLUGGED_ICONS = {
     10: "",
@@ -121,6 +122,47 @@ def _draw_right_status(screen: Screen, is_last: bool, cells: list) -> int:
     return screen.cursor.x
 
 
+def _draw_vertical_tab(
+    draw_data: DrawData,
+    screen: Screen,
+    tab: TabBarData,
+    index: int,
+) -> int:
+    screen.draw(" ")
+    draw_title(draw_data, screen, tab, index, screen.columns - 1)
+    if screen.cursor.x >= screen.columns:
+        screen.cursor.x = screen.columns - 1
+        screen.draw("…")
+    padding = screen.columns - screen.cursor.x
+    if padding > 0:
+        screen.draw(" " * padding)
+    return screen.cursor.x
+
+
+def _fitting_status_cells(cells: list, width: int) -> list:
+    fitted = list(cells)
+    while fitted and sum(len(str(cell[1])) for cell in fitted) > width:
+        fitted.pop()
+    return fitted
+
+
+def _draw_vertical_status(screen: Screen, cells: list) -> int:
+    if screen.lines < 2:
+        return screen.cursor.x
+    fitted = _fitting_status_cells(cells, screen.columns - RIGHT_MARGIN)
+    if not fitted:
+        return screen.cursor.x
+    length = sum(len(str(cell[1])) for cell in fitted)
+    draw_attributed_string(Formatter.reset, screen)
+    screen.cursor.bg = 0
+    screen.cursor.y = screen.lines - 1
+    screen.cursor.x = max(0, screen.columns - RIGHT_MARGIN - length)
+    for color, status in fitted:
+        screen.cursor.fg = color
+        screen.draw(status)
+    return screen.cursor.x
+
+
 def _redraw_tab_bar(_):
     tm = get_boss().active_tab_manager
     if tm is not None:
@@ -187,6 +229,12 @@ def draw_tab(
     right_status_length = RIGHT_MARGIN
     for cell in cells:
         right_status_length += len(str(cell[1]))
+
+    if draw_data.tab_bar_edge in VERTICAL_EDGES:
+        _draw_vertical_tab(draw_data, screen, tab, index)
+        if index == 1:
+            _draw_vertical_status(screen, cells)
+        return screen.cursor.x
 
     _draw_icon(screen, index)
     _draw_left_status(
